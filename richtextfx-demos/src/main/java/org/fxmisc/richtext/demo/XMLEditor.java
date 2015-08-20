@@ -7,11 +7,14 @@ import java.util.regex.Pattern;
 
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
+import org.fxmisc.richtext.Paragraph;
 import org.fxmisc.richtext.StyleSpans;
 import org.fxmisc.richtext.StyleSpansBuilder;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -75,7 +78,17 @@ public class XMLEditor extends Application {
         CodeArea codeArea = new CodeArea();
         codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea));
 
+        codeArea.setOnKeyTyped((keyEvent) -> {
+        	System.out.println("Key Typed 1");
+        });
+        
+        
+        codeArea.addEventHandler(KeyEvent.KEY_TYPED, (event) -> {
+        	System.out.println("Key Typed 2");
+        });
+        
         codeArea.textProperty().addListener((obs, oldText, newText) -> {
+        	System.out.println("TextChanged");
             codeArea.setStyleSpans(0, computeHighlighting(newText));
         });
         codeArea.replaceText(0, 0, sampleCode);
@@ -130,5 +143,15 @@ public class XMLEditor extends Application {
         }
         spansBuilder.add(Collections.emptyList(), text.length() - lastKwEnd);
         return spansBuilder.create();
+    }
+    
+    private class MyEventHandler implements EventHandler<KeyEvent> {
+
+		@Override
+		public void handle(KeyEvent event) {
+			// TODO Auto-generated method stub
+			
+		}
+    	
     }
 }
