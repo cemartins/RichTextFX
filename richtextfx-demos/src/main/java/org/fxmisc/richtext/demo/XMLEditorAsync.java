@@ -77,7 +77,7 @@ public class XMLEditorAsync extends Application {
         launch(args);
     }
     
-    CodeArea codeArea;
+    private CodeArea codeArea;
     private ExecutorService executor;
 
     @Override
@@ -93,17 +93,18 @@ public class XMLEditorAsync extends Application {
         .map(Try::get)
         .subscribe(this::applyHighlighting);
 
-        
-        codeArea.textProperty().addListener((obs, oldText, newText) -> {
-            codeArea.setStyleSpans(0, computeHighlighting(newText));
-        });
         codeArea.replaceText(0, 0, sampleCode);
 
         Scene scene = new Scene(new StackPane(codeArea), 600, 400);
         scene.getStylesheets().add(JavaKeywordsAsync.class.getResource("xml-highlighting.css").toExternalForm());
         primaryStage.setScene(scene);
-        primaryStage.setTitle("XML Editor Demo");
+        primaryStage.setTitle("XML Editor Async Demo");
         primaryStage.show();
+    }
+    
+    @Override
+    public void stop() {
+        executor.shutdown();
     }
 
     private Task<StyleSpans<Collection<String>>> computeHighlightingAsync() {
